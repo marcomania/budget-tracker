@@ -1,0 +1,52 @@
+{
+    "name": "Next.js Dev Container",
+    "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+        "VARIANT": "20-bullseye",
+        "EXTRA_NODE_VERSION": 22,
+        "USER": "node",
+        "GROUP": "node"
+    }
+    },
+    "settings": {
+		"terminal.integrated.fontFamily": "MesloLGS NF"
+	},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "bradlc.vscode-tailwindcss",
+                "dsznajder.es7-react-js-snippets",
+                "yzhang.markdown-all-in-one",
+                "ms-azuretools.vscode-docker"]
+        }
+    },
+    "forwardPorts": [3000],
+    "postCreateCommand": "npm install",
+	"postAttachCommand": "npm run dev",
+    
+    "portsAttributes": {
+        "3000": {
+            "label": "Application",
+            "onAutoForward": "openPreview"
+        }
+	},
+
+    "remoteUser": "node",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": "os-provided",
+        "ghcr.io/devcontainers/features/rust:1": "latest",
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "v2"
+		}
+    },
+    "remoteEnv": {
+        "DISPLAY": ":0"
+    }
+}
+    

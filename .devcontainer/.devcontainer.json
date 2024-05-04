@@ -4,14 +4,11 @@
     "dockerfile": "Dockerfile",
     "args": {
         "VARIANT": "20-bullseye",
-        "EXTRA_NODE_VERSION": 22,
+        "EXTRA_NODE_VERSION": "22",
         "USER": "node",
         "GROUP": "node"
     }
     },
-    "settings": {
-		"terminal.integrated.fontFamily": "MesloLGS NF"
-	},
     "customizations": {
         "vscode": {
             "extensions": [
@@ -19,7 +16,10 @@
                 "bradlc.vscode-tailwindcss",
                 "dsznajder.es7-react-js-snippets",
                 "yzhang.markdown-all-in-one",
-                "ms-azuretools.vscode-docker"]
+                "ms-azuretools.vscode-docker"],
+            "settings": {
+                "terminal.integrated.fontFamily": "MesloLGS NF"
+            }
         }
     },
     "forwardPorts": [3000],

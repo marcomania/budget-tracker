@@ -28,8 +28,6 @@ import { Currencies, Currency } from "@/lib/currencies"
 import { UpdateUserCurrency } from "@/lib/actions"
 import { toast } from "sonner"
 
-
-
 export  function  CurrencyComboBox() {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")

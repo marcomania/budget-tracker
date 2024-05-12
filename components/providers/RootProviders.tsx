@@ -1,10 +1,11 @@
 "use client"
 
 import { ThemeProvider } from 'next-themes'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, createContext, useContext, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Toaster, toast } from 'sonner'
+import { Toaster } from '../ui/sonner'
+import { toast } from 'sonner'
 
 // ...
 
@@ -35,19 +36,17 @@ const RootProviders = ({children} : {children: ReactNode}) => {
 
 
   return (
-    <>
-      <Toaster richColors position='bottom-right'/>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-            attribute='class'
-            defaultTheme='dark'
-            enableSystem
-            disableTransitionOnChange>
-            {children}
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider
+          attribute='class'
+          defaultTheme='dark'
+          enableSystem
+          disableTransitionOnChange>
+          <Toaster richColors position='bottom-right'/>
+          {children}
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 

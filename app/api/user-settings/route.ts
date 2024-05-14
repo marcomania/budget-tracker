@@ -1,12 +1,11 @@
 import prisma from "@/lib/prisma";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function GET(request:Request) {
 
   const { userId } = auth();
-  //const user = await currentUser();
   if(!userId) redirect("/sign-in");
 
 

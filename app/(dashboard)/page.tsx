@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import CreateTransactionDialog from './_components/CreateTransactionDialog';
+import Overview from './_components/Overview';
 
 const Page = async () => {
   const user = await currentUser();
@@ -39,6 +40,7 @@ const Page = async () => {
           </div>
         </div>
       </div>
+      <Overview userSettings={userSettings} />
     </div>
   )
 }

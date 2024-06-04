@@ -4,6 +4,7 @@
     pkgs.nodejs_20
     pkgs.openssl
     pkgs.python311Packages.python-dotenv
+    pkgs.github-cli
   ];
   idx.extensions = [
     

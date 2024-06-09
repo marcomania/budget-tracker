@@ -1,7 +1,7 @@
 'use client'
 
 import { GetCategoriesStatsResponseType } from "@/app/api/stats/categories/route";
-import { SekeletonWrapper } from "@/components/SkeletonWrapper";
+import { SkeletonWrapper } from "@/components/SkeletonWrapper";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,12 +27,12 @@ const CategoriesStats = ({from, to, userSettings}: Props) => {
 
   return (
     <div className="flex w-full flex-wrap g-2 md:flex-nowrap">
-      <SekeletonWrapper isLoading={statsQuery.isFetching}>
+      <SkeletonWrapper isLoading={statsQuery.isFetching}>
         <CategoriesCard formatter={formatter} type="income" data={statsQuery.data || []} />
-      </SekeletonWrapper>
-      <SekeletonWrapper isLoading={statsQuery.isFetching}>
+      </SkeletonWrapper>
+      <SkeletonWrapper isLoading={statsQuery.isFetching}>
         <CategoriesCard formatter={formatter} type="expense" data={statsQuery.data || []} />
-      </SekeletonWrapper>
+      </SkeletonWrapper>
     </div>
   )
 }

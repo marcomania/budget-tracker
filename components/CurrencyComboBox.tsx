@@ -23,7 +23,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { UserSettings } from "@prisma/client"
 import { useCallback, useEffect, useState } from "react"
-import { SekeletonWrapper } from "./SkeletonWrapper"
+import { SkeletonWrapper } from "./SkeletonWrapper"
 import { Currencies, Currency } from "@/lib/currencies"
 import { UpdateUserCurrency } from "@/lib/actions"
 import { toast } from "sonner"
@@ -74,7 +74,7 @@ export  function  CurrencyComboBox() {
 
   if (isDesktop) {
     return (
-      <SekeletonWrapper isLoading={userSettings.isFetching}>
+      <SkeletonWrapper isLoading={userSettings.isFetching}>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-full justify-start" disabled={mutation.isPending}>
@@ -85,12 +85,12 @@ export  function  CurrencyComboBox() {
             <OptionList setOpen={setOpen} setSelectedOption={selectOption} />
           </PopoverContent>
         </Popover>
-      </SekeletonWrapper>
+      </SkeletonWrapper>
     )
   }
 
   return (
-    <SekeletonWrapper isLoading={userSettings.isFetching}>
+    <SkeletonWrapper isLoading={userSettings.isFetching}>
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
           <Button variant="outline" className="w-full justify-start" disabled={mutation.isPending}>
@@ -103,7 +103,7 @@ export  function  CurrencyComboBox() {
           </div>
         </DrawerContent>
       </Drawer>
-    </SekeletonWrapper>
+    </SkeletonWrapper>
   )
 }
 

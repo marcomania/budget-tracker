@@ -26,7 +26,7 @@ const CategoriesStats = ({from, to, userSettings}: Props) => {
   }, [userSettings.currency]);
 
   return (
-    <div className="flex w-full flex-wrap g-2 md:flex-nowrap">
+    <div className="flex w-full flex-wrap gap-2 md:flex-nowrap">
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
         <CategoriesCard formatter={formatter} type="income" data={statsQuery.data || []} />
       </SkeletonWrapper>

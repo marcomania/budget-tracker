@@ -13,6 +13,7 @@ import HistoryPeriodSelector from "./HistoryPeriodSelector";
 import { SkeletonWrapper } from "@/components/SkeletonWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { GetHistoryDataResponseType } from "@/app/api/history-data/route";
 
 function History ({userSettings} : {userSettings: UserSettings}) {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
@@ -25,7 +26,7 @@ function History ({userSettings} : {userSettings: UserSettings}) {
     return GetFormatterForCurrency(userSettings.currency)
   }, [userSettings.currency]);
   
-  const historyDataQuery = useQuery({
+  const historyDataQuery = useQuery<GetHistoryDataResponseType>({
     queryKey: ["overview", "history", timeframe, period],
     queryFn: () => fetch(`/api/history-data?timeframe=${timeframe}&year=${period.year}&month=${period.month}`).then((res) => res.json()),
   }); 

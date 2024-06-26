@@ -5,6 +5,7 @@
     pkgs.openssl
     pkgs.python311Packages.python-dotenv
     pkgs.github-cli
+    pkgs.fnm
   ];
   idx.extensions = [
     

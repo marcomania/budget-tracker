@@ -1,6 +1,6 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
   @layer base {
     :root {
@@ -63,6 +63,32 @@
       --border: 240 3.7% 15.9%;
       --input: 240 3.7% 15.9%;
       --ring: 240 4.9% 83.9%;
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary) var(--primary);
+    }
+    
+    /* width */
+    *::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    *::-webkit-scrollbar-track {
+      background: #888;
+      border-radius: 5px;
+    }
+
+    /* Handle */
+    *::-webkit-scrollbar-thumb {
+      background: #000;
+      border-radius: 5px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
     }
   }
 

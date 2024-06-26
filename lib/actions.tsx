@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { CreateCategorySchema, CreateCategorySchemaType, DeleteCategorySchema, DeleteCategorySchemaType } from "@/schema/categories";
 import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/transaction";
+import { revalidatePath } from "next/cache";
 
 export async function UpdateUserCurrency(currency: string) {
   const parsedBody = UpdateUserCurrencySchema.safeParse({ currency })
@@ -28,6 +29,7 @@ export async function UpdateUserCurrency(currency: string) {
     },
   });
 
+  revalidatePath("/")
   return userSettings;
 }
 
@@ -157,4 +159,61 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
       }
     })
   ])
+}
+
+export async function DeleteTransaction(id: string) {
+  const { userId } = auth();
+  if(!userId) {
+    redirect("/sign-in")
+  }
+
+  const transaction = await prisma.transaction.findUnique({
+    where: {
+      userId,
+      id,
+    },
+  });
+
+  if(!transaction) throw new Error("bad request");
+ 
+  await prisma.$transaction([
+    //Delete transaction from DB
+    prisma.transaction.delete({
+      where: {
+        id,
+        userId,
+      },
+    }),
+
+    //Update month history
+    prisma.monthHistory.update({
+      where: {
+        day_month_year_userId: {
+          userId,
+          day: transaction.date.getUTCDay(),
+          month: transaction.date.getUTCMonth(),
+          year: transaction.date.getFullYear()
+        }
+      },
+      data: {
+        expense: transaction.type === "expense" ? { decrement: transaction.amount } : undefined,
+        income: transaction.type === "income" ? { decrement: transaction.amount } : undefined, 
+      }
+    }),
+
+    //Update year history
+    prisma.yearHistory.update({
+      where: {
+        month_year_userId: {
+          userId,
+          month: transaction.date.getUTCMonth(),
+          year: transaction.date.getFullYear()
+        }
+      },
+      data: {
+        expense: transaction.type === "expense" ? { decrement: transaction.amount } : undefined,
+        income: transaction.type === "income" ? { decrement: transaction.amount } : undefined, 
+      }
+    }),
+  ]);
 }

@@ -59,6 +59,16 @@ export async function GET(req: NextRequest) {
       return Response.json(results);
     } else if (table === "students") {
       const results = await prisma.n8n_students.findMany({
+        select: {
+          card_id: true,
+          first_name: true,
+          last_name: true,
+          avg: true,
+          phone: true,
+          email: true,
+          eap: true,
+          created_at: true,
+        },
         skip,
         take: PAGE_SIZE,
       });

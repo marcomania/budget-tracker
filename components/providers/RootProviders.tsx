@@ -45,7 +45,7 @@ const RootProviders = ({children} : {children: ReactNode}) => {
           <Toaster richColors position='bottom-right'/>
           {children}
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/** <ReactQueryDevtools initialIsOpen={false} /> **/}
     </QueryClientProvider>
   )
 }

@@ -1,40 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-type ChatWidgetConfig = {
-  webhook: {
-    url: string;
-    route: string;
-  };
-  style: {
-    primaryColor: string;
-    secondaryColor: string;
-    position: "left" | "right";
-    backgroundColor: string;
-    fontColor: string;
-  };
-};
-
-const chatWidgetConfig: ChatWidgetConfig = {
-  webhook: {
-    url: "https://marcochatbot.app.n8n.cloud/webhook/e2a7ef83-74a0-4aa5-a735-2e5d4a7f43af/chat",
-    route: "general",
-  },
-  style: {
-    primaryColor: "#854fff",
-    secondaryColor: "#6b3fd4",
-    position: "right",
-    backgroundColor: "#ffffff",
-    fontColor: "#333333",
-  },
-};
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { X, MessageCircle } from "lucide-react";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatIdRef = useRef<string>("");
+
+  const [isBotTyping, setIsBotTyping] = useState(false);
+  
+
+  const webhookUrl =
+    "https://marcochatbot.app.n8n.cloud/webhook/e2a7ef83-74a0-4aa5-a735-2e5d4a7f43af/chat";
+  const route = "general";
 
   useEffect(() => {
     let chatId = sessionStorage.getItem("chatId");
@@ -50,140 +32,124 @@ export default function ChatWidget() {
     if (!message) return;
 
     setMessages((prev) => [...prev, message]);
-
     inputRef.current!.value = "";
+    setIsBotTyping(true);
 
     try {
-      const res = await fetch(chatWidgetConfig.webhook.url, {
+      const res = await fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chatId: chatIdRef.current,
           message,
-          route: chatWidgetConfig.webhook.route,
+          route,
         }),
       });
 
       const data = await res.json();
-      const botReply = data.output || "Sorry, I couldn't understand that.";
+      const botReply = data.output || "Lo siento, no entendí eso.";
       setMessages((prev) => [...prev, `🤖 ${botReply}`]);
     } catch (err) {
       console.error(err);
-      setMessages((prev) => [...prev, "⚠️ Error sending message."]);
+      setMessages((prev) => [...prev, "⚠️ Error al enviar el mensaje."]);
+    }
+    finally {
+      setIsBotTyping(false);
     }
   };
 
   return (
     <>
-      {/* Bubble Button */}
       {!isOpen && (
-        <button
+        <Button
           onClick={() => setIsOpen(true)}
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            [chatWidgetConfig.style.position]: "20px",
-            backgroundColor: chatWidgetConfig.style.primaryColor,
-            color: "#fff",
-            border: "none",
-            borderRadius: "50%",
-            width: "60px",
-            height: "60px",
-            fontSize: "24px",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
+          className="fixed bottom-5 right-5 rounded-full w-14 h-14 p-0 bg-[#8b0000] hover:bg-[#a60000] text-white shadow-lg z-[1000]"
         >
-          💬
-        </button>
+          <MessageCircle className="w-6 h-6" />
+        </Button>
       )}
 
-      {/* Chat Widget */}
       {isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            [chatWidgetConfig.style.position]: "20px",
-            width: "300px",
-            height: "400px",
-            backgroundColor: chatWidgetConfig.style.backgroundColor,
-            color: chatWidgetConfig.style.fontColor,
-            borderRadius: "10px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.2)",
-            display: "flex",
-            flexDirection: "column",
-            zIndex: 1000,
-          }}
-        >
+        <div className="fixed bottom-5 right-5 w-80 h-96 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-xl flex flex-col z-[1000]">
           {/* Header */}
-          <div
-            style={{
-              padding: "10px",
-              backgroundColor: chatWidgetConfig.style.secondaryColor,
-              color: "#fff",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderTopLeftRadius: "10px",
-              borderTopRightRadius: "10px",
-            }}
-          >
-            <span>Chat</span>
-            <button
+          <div className="bg-[#b22222] text-white p-3 rounded-t-xl flex justify-between items-center">
+            <span className="font-semibold">Asistente FISI</span>
+            <Button
               onClick={() => setIsOpen(false)}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "#fff",
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-[#a50000]/30"
             >
-              ✖
-            </button>
+              <X className="w-4 h-4" />
+            </Button>
           </div>
 
           {/* Body */}
-          <div
-            style={{
-              flex: 1,
-              padding: "10px",
-              overflowY: "auto",
-            }}
-          >
-            <p>
-              <strong>Hi 👋, how can we help?</strong>
-            </p>
-            {messages.map((msg, idx) => (
-              <p key={idx} style={{ margin: "8px 0" }}>
-                {msg}
-              </p>
-            ))}
+          <div className="flex-1 p-3 overflow-y-auto text-sm space-y-2">
+            <div className="text-gray-800 dark:text-gray-100">
+              <div className="bg-gray-100 dark:bg-zinc-800 p-2 rounded-lg w-fit max-w-[85%]">
+                Hola 👋, ¿Cómo puedo ayudarte?
+              </div>
+            </div>
+            {messages.map((msg, idx) => {
+              const isBot = msg.startsWith("🤖 ");
+              const cleanMsg = isBot ? msg.replace("🤖 ", "") : msg;
+
+              return (
+                <div
+                  key={idx}
+                  className={`flex ${
+                    isBot ? "justify-end" : "justify-start"
+                  } text-sm`}
+                >
+                  <div
+                    className={`px-3 py-2 rounded-lg max-w-[85%] break-words ${
+                      isBot
+                        ? "bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-gray-100"
+                        : "bg-[#3f6cb5]  text-white dark:bg-[#274a8d] dark:text-gray-100"
+                    }`}
+                  >
+                    {cleanMsg}
+                  </div>
+                </div>
+              );
+            })}
+            {isBotTyping && (
+              <div className="flex justify-end text-sm">
+                <div className="px-3 py-2 rounded-lg max-w-[85%] bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-gray-400 italic animate-pulse">
+                  Escribiendo...
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
-          <div
-            style={{
-              padding: "10px",
-              borderTop: "1px solid #ddd",
-              display: "flex",
-              gap: "8px",
+          <form
+            className="p-3 border-t border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendMessage();
             }}
           >
-            <input
+            <Input
               type="text"
               ref={inputRef}
-              placeholder="Type your message..."
-              style={{ flex: 1, padding: "8px" }}
+              placeholder="Escriba su mensaje..."
+              className="text-sm bg-white dark:bg-zinc-800 dark:text-white"
               onKeyDown={(e) => {
-                if (e.key === "Enter") sendMessage();
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  sendMessage();
+                }
               }}
             />
-            <button onClick={sendMessage} style={{ padding: "8px" }}>
-              Send
-            </button>
-          </div>
+            <Button
+              type="submit"
+              className="bg-[#8b0000] hover:bg-[#a60000] text-white"
+            >
+              Enviar
+            </Button>
+          </form>
         </div>
       )}
     </>

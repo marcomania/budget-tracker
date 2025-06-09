@@ -1,14 +1,102 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model conversations {
+  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  phone              String
+  started_at         DateTime?  @default(now()) @db.Timestamp(6)
+  ended_at           DateTime?  @db.Timestamp(6)
+  channel            String?    @default("whatsapp")
+  category           String?
+  waiting_for_rating Boolean?   @default(false)
+  rating_sent        Boolean?   @default(false)
+  rating_score       Int?
+  created_at         DateTime?  @default(now()) @db.Timestamp(6)
+  messages           messages[]
+}
+
+model documents {
+  id        BigInt                 @id @default(autoincrement())
+  content   String?
+  metadata  Json?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model messages {
+  id              Int           @id @default(autoincrement())
+  conversation_id String        @db.Uuid
+  sender          String
+  message         String
+  timestamp       DateTime?     @default(now()) @db.Timestamp(6)
+  interval        Int?          @db.SmallInt
+  conversations   conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model n8n_chat_histories {
+  id         Int    @id @default(autoincrement())
+  session_id String @db.VarChar(255)
+  message    Json
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model n8n_chatbot_summary {
+  year        Int      @db.SmallInt
+  month       Int      @db.SmallInt
+  category    String
+  query_count Int?     @db.SmallInt
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+
+  @@id([year, month, category])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model n8n_faq_list {
+  id                BigInt   @id @default(autoincrement())
+  original_question String?
+  variants          String?
+  response          String?
+  category          String?
+  context           String?
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model n8n_interactions {
+  id                  BigInt   @id @default(autoincrement())
+  session_id          String?
+  pregunta_texto      String?
+  timestamp_recibido  String?
+  timestamp_respuesta String?
+  tiempo_respuesta    Int?     @db.SmallInt
+  respuesta_texto     String?
+  categoria           String?
+  channel             String?
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model n8n_students {
+  id         BigInt   @id @default(autoincrement())
+  card_id    String?
+  first_name String?
+  last_name  String?
+  avg        String?
+  phone      String?
+  email      String?
+  study_plan String?
+  eap        String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
 }
 
 model UserSettings {

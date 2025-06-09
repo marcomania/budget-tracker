@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { QueryChart } from "../../_components/SummaryChart";
 
 const TABLES = ["conversations", "messages", "summary", "faqs", "students"];
 
@@ -56,7 +57,6 @@ export default function DataViewerPage() {
       <h1 className="text-2xl font-bold mb-4 text-[#3f6cb5] dark:text-[#5f8de0]">
         Visor de Datos
       </h1>
-
       <div className="mb-4">
         <Select
           value={table}
@@ -77,7 +77,6 @@ export default function DataViewerPage() {
           </SelectContent>
         </Select>
       </div>
-
       <Card className="rounded-2xl shadow p-4 overflow-auto">
         {loading ? (
           <p className="text-center text-muted-foreground">Cargando...</p>
@@ -100,7 +99,6 @@ export default function DataViewerPage() {
           </table>
         )}
       </Card>
-
       <div className="flex items-center justify-between mt-4">
         <Button
           variant="outline"
@@ -114,6 +112,14 @@ export default function DataViewerPage() {
           Siguiente
         </Button>
       </div>
+      {table === "summary" && (
+        <>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Gráfico de consultas por mes
+          </p>
+          <QueryChart data={data} />
+        </>
+      )}
     </div>
   );
 }

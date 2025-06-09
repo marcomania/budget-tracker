@@ -10,7 +10,8 @@
     "lint": "next lint",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
-    "vercel-build": "prisma generate && next build"
+    "vercel-build": "prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.5",

@@ -86,7 +86,7 @@ export default function Home() {
           {/* Left column - Conference title */}
           <div>
             <h1 className="text-4xl font-bold mb-4">
-              Conferencia virtual "La evaluación en la Universidad"
+              {`Conferencia virtual "La evaluación en la Universidad"`}
             </h1>
             <div className="bg-[#3d0c0c] p-4 mt-4">
               <p>La Oficina de Calidad Académica y Acreditación...</p>

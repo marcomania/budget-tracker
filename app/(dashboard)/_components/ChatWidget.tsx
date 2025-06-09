@@ -86,7 +86,7 @@ export default function ChatWidget() {
 
           {/* Body */}
           <div className="flex-1 p-3 overflow-y-auto text-sm space-y-2">
-            <div className="text-gray-800 dark:text-gray-100">
+            <div className="flex justify-end text-gray-800 dark:text-gray-100">
               <div className="bg-gray-100 dark:bg-zinc-800 p-2 rounded-lg w-fit max-w-[85%]">
                 Hola 👋, ¿Cómo puedo ayudarte?
               </div>

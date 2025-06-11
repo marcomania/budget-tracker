@@ -10,23 +10,24 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model conversations {
-  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  phone              String
-  started_at         DateTime?  @default(now()) @db.Timestamp(6)
-  ended_at           DateTime?  @db.Timestamp(6)
-  channel            String?    @default("whatsapp")
-  category           String?
-  waiting_for_rating Boolean?   @default(false)
-  rating_sent        Boolean?   @default(false)
-  rating_score       Int?
-  created_at         DateTime?  @default(now()) @db.Timestamp(6)
-  messages           messages[]
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  phone        String
+  started_at   DateTime?  @default(now()) @db.Timestamp(6)
+  ended_at     DateTime?  @db.Timestamp(6)
+  channel      String?    @default("whatsapp")
+  category     String?
+  flow_status  String?
+  rating_sent  Boolean?   @default(false)
+  rating_score Int?
+  created_at   DateTime?  @default(now()) @db.Timestamp(6)
+  messages     messages[]
 }
 
 model documents {
   id        BigInt                 @id @default(autoincrement())
   content   String?
   metadata  Json?
+  embedding Unsupported("vector")?
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -115,36 +116,35 @@ model Category {
 }
 
 model Transaction {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  amount      Float
-  description String
-  date        DateTime
-  userId      String
-  type        String   @default("income")
-
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  amount       Float
+  description  String
+  date         DateTime
+  userId       String
+  type         String   @default("income")
   category     String
   categoryIcon String
 }
 
 model MonthHistory {
   userId  String
-  day Int
-  month Int
-  year Int
-  income Float
+  day     Int
+  month   Int
+  year    Int
+  income  Float
   expense Float
 
-  @@id([day,month,year,userId])
+  @@id([day, month, year, userId])
 }
 
 model YearHistory {
   userId  String
-  month Int
-  year Int
-  income Float
+  month   Int
+  year    Int
+  income  Float
   expense Float
 
-  @@id([month,year,userId])
+  @@id([month, year, userId])
 }

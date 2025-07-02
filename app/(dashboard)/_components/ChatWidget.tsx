@@ -15,7 +15,7 @@ export default function ChatWidget() {
   
 
   const webhookUrl =
-    "https://marcochatbot.app.n8n.cloud/webhook/e2a7ef83-74a0-4aa5-a735-2e5d4a7f43af/chat";
+    "https://n8ntesis-n8n.s12hz1.easypanel.host/webhook/ffe3a119-8d98-4f7b-bc57-1f4b71b93385/chat";
   const route = "general";
 
   useEffect(() => {
